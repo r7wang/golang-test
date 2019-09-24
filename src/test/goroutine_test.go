@@ -1,4 +1,4 @@
-package goroutine
+package test
 
 import (
 	"sync"
