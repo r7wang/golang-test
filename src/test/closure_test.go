@@ -3,7 +3,7 @@ package test
 import "testing"
 
 func TestClosure(t *testing.T) {
-	inner := getInnerFunc()
+	inner := getInnerFunc(t)
 	t.Logf("Inner Func: %p, Local Ref: %p", inner, &inner)
 	for i := 0; i < 10; i++ {
 		idx := inner()
@@ -12,9 +12,9 @@ func TestClosure(t *testing.T) {
 }
 
 func TestSameClosure(t *testing.T) {
-	inner1 := getInnerFunc()
+	inner1 := getInnerFunc(t)
 	t.Logf("(1) Func Pointer: %p, Local Ref: %p", inner1, &inner1)
-	inner2 := getInnerFunc()
+	inner2 := getInnerFunc(t)
 	t.Logf("(2) Func Pointer: %p, Local Ref: %p", inner2, &inner2)
 	for i := 0; i < 4; i++ {
 		idx1 := inner1()
@@ -25,7 +25,7 @@ func TestSameClosure(t *testing.T) {
 }
 
 func TestPassClosure(t *testing.T) {
-	inner := getInnerFunc()
+	inner := getInnerFunc(t)
 	t.Logf("Func Pointer: %p, Local Ref: %p", inner, &inner)
 	for i := 0; i < 4; i++ {
 		idx := inner()
@@ -34,13 +34,15 @@ func TestPassClosure(t *testing.T) {
 	passClosure(t, inner)
 }
 
-func getInnerFunc() func() int {
+func getInnerFunc(t *testing.T) func() int {
 	idx := 0
 
-	return func() int {
+	closure := func() int {
 		idx++
 		return idx
 	}
+	t.Logf("Closure Pointer: %p, Local Ref: %p", closure, &closure)
+	return closure
 }
 
 func passClosure(t *testing.T, closure func() int) {
